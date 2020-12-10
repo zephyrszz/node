@@ -1,0 +1,135 @@
+<form class="layui-form" action="">
+    <div class="layui-form-item">
+        <label class="layui-form-label">用户名</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" required lay-verify="username" placeholder="请输入标题" autocomplete="off"
+                class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">密码框</label>
+        <div class="layui-input-inline">
+            <input type="password" name="password" required lay-verify="required" placeholder="请输入密码" autocomplete="off"
+                class="layui-input">
+        </div>
+        <div class="layui-form-mid layui-word-aux">辅助文字</div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">选择框</label>
+        <div class="layui-input-block">
+            <select name="city" lay-verify="required">
+                <option value=""></option>
+                <option value="0">北京</option>
+                <option value="1">上海</option>
+                <option value="2">广州</option>
+                <option value="3">深圳</option>
+                <option value="4">杭州</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">复选框</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="like" title="写作" value="写作">
+            <input type="checkbox" name="like" title="阅读" checked value="阅读">
+            <input type="checkbox" name="like" title="发呆" value="发呆">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">开关</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="switch" lay-skin="switch">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">单选框</label>
+        <div class="layui-input-block">
+            <input type="radio" name="sex" value="男" title="男">
+            <input type="radio" name="sex" value="女" title="女" checked>
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">文本域</label>
+        <div class="layui-input-block">
+            <textarea id="demo" style="display: none;"></textarea>
+        </div>
+      </div>
+    
+    
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">注册日期</label>
+        <div class="layui-input-block" style="width: 200px;">
+            <input type="text" name="date" class="layui-input" id="test1" autocomplete="off">
+           
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    //Demo
+    layui.use(['form','layedit','laydate','jquery','layer'], function () {
+        var form = layui.form;
+        var layedit = layui.layedit;
+        var laydate = layui.laydate;
+        var $ = layui.jquery
+        var layer = layui.layer
+
+         //执行一个laydate实例
+        laydate.render({
+            elem: '#test1' //指定元素
+        });
+
+        // 创建编辑器
+        layedit.build('demo')
+
+        // 表单验证
+        form.verify({
+            username:[/^[a-zA-Z1-9]{6,12}$/,'用户名填写6-12的数字或字母']
+        })
+
+
+        //监听提交
+        form.on('submit(formDemo)', function (data) {
+            layer.msg(JSON.stringify(data.field));
+
+            // 初始化
+            let like =[]
+
+
+            // 复选框
+            $("input[name='like']:checked").each(function(){
+               like.push($(this).val())
+            })
+            console.log(like)
+
+            // 获取表单值
+            console.log(data.field)
+
+            // 发送到后端保存
+            $.post('/admin/regDo',{...data.field,like},(res)=>{
+
+                if(res.status == 200){
+                    // 提示
+                    layer.msg('数据已保存！')
+                    // 重置表单
+                    $("form")[0].reset()
+                }
+
+                console.log(res);
+            },'json')
+
+            return false;
+
+            
+        });
+
+        // 重载表单
+        form.render();
+    });
+</script>

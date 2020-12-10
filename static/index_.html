@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+</head>
+<body>
+
+    {{include './header.html' header}}
+
+    <div><%= title %></div>
+    <div>{{opts.key1}}</div>
+    <div>{{@descript}}</div>
+    <div>
+        {{if age<18}}
+            <p>未成年</p>
+        {{else if age>=18 && age<50}}
+            <p>成年人</p>
+        {{else}}
+            <p>老年人</p>
+        {{/if}}
+    </div>
+    <div>
+        {{each arr}}
+        <p>{{$index}}-----{{$value}}</p>
+        {{/each}}
+    </div>
+</body>
+</html>

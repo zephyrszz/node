@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文章上架</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+</head>
+
+<body>
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">产品名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" required lay-verify="required" placeholder="请输入标题" autocomplete="off"
+                    class="layui-input">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">封面</label>
+            <div class="layui-input-block">
+                <input type="file" name="poster" id="poster" accept="image/*">
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">描述</label>
+            <div class="layui-input-block">
+                <textarea id="demo" style="display: none;"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+
+
+    <script src="/layui/layui.js"></script>
+    <script>
+        //Demo
+        layui.use(['form', 'layedit', 'jquery'], function () {
+            var form = layui.form;
+            var layedit = layui.layedit;
+            var $ = layui.jquery
+
+
+            // 创建编辑器
+            var index = layedit.build('demo')
+            //监听提交
+            form.on('submit(formDemo)', function (data) {
+
+
+                // 标题
+                let {
+                    title
+                } = data.field
+
+                // 封面文件
+                let file = $("#poster")[0].files[0]
+
+                // console.log(file);
+
+                // 描述
+                let descript = layedit.getContent(index)
+
+                // console.log(descript);
+
+                // 创建模拟表单FormData()
+                let formData = new FormData()
+
+                // 添加表单数据到模拟表单
+                formData.append('tt', title)
+                formData.append('photo', file)
+                formData.append('descript', descript)
+                // 发送数据到后台
+                if (title && file) {
+                    $.ajax({
+                        url: '/addDo',
+                        method: 'post',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function (res){
+                            console.log(res);
+                        }
+                    })
+                }
+                return false;
+            });
+        });
+    </script>
+</body>
+
+</html>
